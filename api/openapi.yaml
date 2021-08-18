@@ -1,0 +1,327 @@
+openapi: 3.0.3
+info:
+  description: MSZUBSKI-API-WS
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  title: mszubski-api-ws
+  version: 1.0.0
+servers:
+- description: MSZUBSKI-API-WS
+  url: http://127.0.0.1:4000/api
+security:
+- api_key: []
+tags:
+- description: Techniczne
+  name: utils
+- description: Autoryzacja
+  name: auth
+- description: Data
+  name: data
+paths:
+  /ping:
+    get:
+      description: Sprawdza komunikację z API
+      operationId: ping
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PongResponse'
+          description: Test komunikacji z API
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidatedModelResponse'
+          description: Not Found
+        "503":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidatedModelResponse'
+          description: Service Unavailable
+      security: []
+      summary: Sprawdza czy serwer jest uruchomiony
+      tags:
+      - utils
+      x-eov-operation-handler: controllers/UtilsController
+  /auth:
+    post:
+      description: Zwraca token autentykacyjny
+      operationId: auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SingIn'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Token'
+          description: Test komunikacji z API
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidatedModelResponse'
+          description: Unauthorized
+      security: []
+      summary: Autoryzacja i działania z tokenem autoryzującym
+      tags:
+      - auth
+      x-eov-operation-handler: controllers/AuthController
+  /data/getUserData:
+    get:
+      description: Pobiera dane dla użytkownika.
+      operationId: getUserData
+      parameters: []
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserData'
+          description: Ok - udało się dokonać zmiany hasła dla użytkownika.
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidatedModelResponse'
+          description: Bad request
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidatedModelResponse'
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidatedModelResponse'
+          description: Insufficient permissions
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidatedModelResponse'
+          description: Not Found
+      summary: Pobranie danych dla użytkownika
+      tags:
+      - data
+      x-eov-operation-handler: controllers/DataController
+  /data/getVehicleData:
+    get:
+      description: Zwraca dane dla samochodu wygasł.
+      operationId: getVehicleData
+      parameters: []
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VehicleData'
+          description: Ok - udało się dokonać zmiany hasła dla użytkownika.
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidatedModelResponse'
+          description: Bad request
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidatedModelResponse'
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidatedModelResponse'
+          description: Insufficient permissions
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidatedModelResponse'
+          description: Not Found
+      summary: Pobranie danych dla samochodu
+      tags:
+      - data
+      x-eov-operation-handler: controllers/DataController
+components:
+  examples:
+    authExample:
+      summary: Nazwa użytkownika i hasło
+      value:
+        password: qazwsx1234
+        username: jkowalski
+  schemas:
+    ping:
+      example:
+        message: Pong
+        dateTime: 2021-08-08 11:00:00.000
+      properties:
+        message:
+          type: string
+        dateTime:
+          type: string
+    pingError:
+      example:
+        dateTime: 2021-08-08 11:00:00.000
+        code:
+          status: 123
+          message: Lorem Ipsum
+        field: Lorem Ipsum
+      properties:
+        message:
+          type: string
+        dateTime:
+          format: date-time
+          pattern: yyyy-MM-dd hh:mm:ss.SSS
+          type: string
+        code:
+          $ref: '#/components/schemas/pingErrorCode'
+        field:
+          type: string
+    PongResponse:
+      example:
+        dateTime: 2021-08-08 11:00:00.000
+        message: Pong
+      properties:
+        dateTime:
+          format: date-time
+          pattern: yyyy-MM-dd hh:mm:ss.SSS
+          type: string
+        message:
+          type: string
+    SingIn:
+      example:
+        username: jkowalski
+        password: qazwsx123
+      properties:
+        password:
+          type: string
+        username:
+          type: string
+    Token:
+      example:
+        token: qazwsx123!@#$
+      properties:
+        token:
+          type: string
+    ValidatedModelResponse:
+      example:
+        code:
+          message: Lorem Ipsum
+          status: 123
+        dateTime: 2021-08-08 11:00:00.000
+        field: Lorem Ipsum
+      properties:
+        code:
+          type: object
+        dateTime:
+          format: date-time
+          pattern: yyyy-MM-dd hh:mm:ss.SSS
+          type: string
+        field:
+          type: string
+    ValidatedModelResponseArray:
+      example:
+      - code:
+          message: Lorem Ipsum
+          status: 123
+        dateTime: 2021-08-08 11:00:00.000
+        field: Lorem Ipsum
+      properties:
+        code:
+          type: object
+        dateTime:
+          format: date-time
+          pattern: yyyy-MM-dd hh:mm:ss.SSS
+          type: string
+        field:
+          type: string
+    pingErrorCode:
+      properties:
+        status:
+          type: integer
+        message:
+          type: string
+      type: object
+    UserData:
+      example:
+        firstName: Jan
+        lastName: Kowalski
+        jobTitle: Programista
+        city: Warszawa
+        streetName: Aleje Jerozolimskie
+        zipCode: 03-198
+        state: mazowieckie
+        bankAccount: 49149644
+        financeAmount: 502.69
+        currencyName: Euro
+        phoneNumber: 793402696
+        email: jankowalski@gmail.com
+        favoriteMusic: Jazz
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        jobTitle:
+          type: string
+        city:
+          type: string
+        streetName:
+          type: string
+        zipCode:
+          type: string
+        state:
+          type: string
+        bankAccount:
+          type: number
+        financeAmount:
+          type: number
+        currencyName:
+          type: string
+        phoneNumber:
+          type: string
+        email:
+          type: string
+        favoriteMusic:
+          type: string
+    VehicleData:
+      example:
+        vehicle: Ferrari Durango
+        manufacturer: Ferrari
+        model: Durango
+        type: Hatchback
+        fuel: Diesel
+        vin: M1WVTM13SRGY82418
+        color: turkusowy
+      properties:
+        vehicle:
+          type: string
+        manufacturer:
+          type: string
+        model:
+          type: string
+        type:
+          type: string
+        fuel:
+          type: string
+        vin:
+          type: string
+        color:
+          type: string
+  securitySchemes:
+    api_key:
+      in: header
+      name: X-Auth-Token
+      type: apiKey
