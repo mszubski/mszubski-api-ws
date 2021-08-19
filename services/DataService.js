@@ -37,7 +37,7 @@ const getUserData = () => new Promise(
 );
 /**
 * Pobranie danych dla samochodu
-* Zwraca dane dla samochodu wygasł.
+* Zwraca dane dla samochodu.
 *
 * returns VehicleData
 * */

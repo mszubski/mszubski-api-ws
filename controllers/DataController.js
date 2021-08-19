@@ -8,6 +8,7 @@
 
 const Controller = require('./Controller');
 const service = require('../services/DataService');
+
 const getUserData = async (request, response) => {
   await Controller.handleRequest(request, response, service.getUserData);
 };
@@ -15,7 +16,6 @@ const getUserData = async (request, response) => {
 const getVehicleData = async (request, response) => {
   await Controller.handleRequest(request, response, service.getVehicleData);
 };
-
 
 module.exports = {
   getUserData,
