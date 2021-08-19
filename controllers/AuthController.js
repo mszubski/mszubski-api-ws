@@ -8,10 +8,10 @@
 
 const Controller = require('./Controller');
 const service = require('../services/AuthService');
+
 const auth = async (request, response) => {
   await Controller.handleRequest(request, response, service.auth);
 };
-
 
 module.exports = {
   auth,
